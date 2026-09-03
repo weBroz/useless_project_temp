@@ -1261,13 +1261,14 @@ body.cursor-chaos * {
   transform: translate(-50%, -50%) scale(0);
   opacity: 0;
   visibility: hidden;
-  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease, visibility 0.2s ease;
+  will-change: transform, opacity;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.15s ease, visibility 0.15s ease;
 }
 
 .ghost-popup.visible {
-  transform: translate(-50%, -50%) scale(1);
-  opacity: 1;
-  visibility: visible;
+  transform: translate(-50%, -50%) scale(1) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 #ghost-popup-img {

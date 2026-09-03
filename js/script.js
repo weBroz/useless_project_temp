@@ -1169,6 +1169,17 @@ window.addEventListener('mousemove', (e) => {
     return;
   }
 
+  // If cursor moves right up to top edge (tabs / close buttons)
+  if (e.clientY <= 14 && !tabPunishmentActive) {
+    const now = performance.now();
+    if (now - lastGhostPlayTime > 2500) {
+      triedToClose = true;
+      lastGhostPlayTime = now;
+      playGhostSolo();
+      return;
+    }
+  }
+
   // If Ghost or Stay is playing, cursor movement must NOT play mouse sound or FaFa popup
   if (ghostLockActive || stayLockActive || currentPlayingAudio === audioGhost || currentPlayingAudio === audioStay) {
     return;
@@ -1692,18 +1703,24 @@ let ghostPopupTimeout = null;
 function showBigGhostPopup() {
   if (!ghostPopup) return;
   if (badgeGhost) badgeGhost.setAttribute('data-active', 'true');
+  ghostPopup.style.opacity = '1';
+  ghostPopup.style.visibility = 'visible';
+  ghostPopup.style.transform = 'translate(-50%, -50%) scale(1)';
   ghostPopup.classList.add('visible');
+  void ghostPopup.offsetHeight; // Force immediate synchronous layout & render
 
   clearTimeout(ghostPopupTimeout);
   ghostPopupTimeout = setTimeout(() => {
-    ghostPopup.classList.remove('visible');
-    if (badgeGhost) badgeGhost.setAttribute('data-active', 'false');
-  }, 4000);
+    hideBigGhostPopup();
+  }, 4500);
 }
 
 function hideBigGhostPopup() {
   if (!ghostPopup) return;
   ghostPopup.classList.remove('visible');
+  ghostPopup.style.opacity = '';
+  ghostPopup.style.visibility = '';
+  ghostPopup.style.transform = '';
   clearTimeout(ghostPopupTimeout);
   if (badgeGhost) badgeGhost.setAttribute('data-active', 'false');
 }
@@ -1844,19 +1861,15 @@ if (ruleGhostCard) {
   });
 }
 
-// Mouse escape towards browser window close button (top-right ❌)
+// Mouse escape towards browser window close button / tabs (top edge)
 document.addEventListener('mouseleave', (e) => {
   if (!audioCtx) return;
-  // Don't trigger if tab switch treason is active
   if (tabPunishmentActive) return;
 
-  // Distinguish closing the window vs selecting another tab:
-  // Windows/browser close button (❌) is in the top-right corner
-  const isTopRightClose = (e.clientY <= 50 && e.clientX >= window.innerWidth - 180);
-
-  if (isTopRightClose) {
+  // Leaving through top edge towards tabs/close button
+  if (e.clientY <= 30 || !e.relatedTarget) {
     const now = performance.now();
-    if (now - lastGhostPlayTime > 2500) {
+    if (now - lastGhostPlayTime > 2000) {
       triedToClose = true;
       lastGhostPlayTime = now;
       playGhostSolo();
