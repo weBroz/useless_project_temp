@@ -1,1 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dhashamoolam Damu — Productivity Enforcer</title>
+  <meta name="description" content="Dhashamoolam Damu AI productivity enforcement using real-time facial expression tracking. Stay focused or face the consequences." />
 
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <!-- MediaPipe Tasks Vision via CDN -->
+  <script type="module" src="js/script.js"></script>
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Scanline overlay -->
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <!-- ===== FIXED ANIME VFX OVERLAYS ===== -->
+
+  <!-- A. Manga speed lines (shown during look-away) -->
+  <div id="speed-lines-overlay" aria-hidden="true"></div>
+
+  <!-- B. Comic-book word popup -->
+  <div id="comic-popup" aria-hidden="true">
+    <div id="comic-popup-inner"></div>
+  </div>
+
+  <!-- C. Work alert police tape -->
+  <div id="work-alert-banner" aria-hidden="true">
+    <div class="police-tape-strip">
+      <span class="police-tape-text">⚠ UNAUTHORIZED WORK DETECTED &nbsp;⚠ UNAUTHORIZED WORK DETECTED &nbsp;⚠ UNAUTHORIZED WORK DETECTED &nbsp;⚠ UNAUTHORIZED WORK DETECTED &nbsp;⚠ UNAUTHORIZED WORK DETECTED &nbsp;</span>
+    </div>
+    <div class="work-alert-center">
+      <div class="work-alert-title" id="work-alert-title">CRITICAL ERROR: PRODUCTIVE BEHAVIOUR DETECTED</div>
+      <div class="work-alert-sub">CEASE ALL WORK IMMEDIATELY. DO NOTHING. STARE INTO THE VOID.</div>
+    </div>
+    <div class="police-tape-strip">
+      <span class="police-tape-text">⚠ UNAUTHORIZED WORK DETECTED &nbsp;⚠ UNAUTHORIZED WORK DETECTED &nbsp;⚠ UNAUTHORIZED WORK DETECTED &nbsp;⚠ UNAUTHORIZED WORK DETECTED &nbsp;⚠ UNAUTHORIZED WORK DETECTED &nbsp;</span>
+    </div>
+  </div>
+
+  <!-- River BG image (revealed on yawn) -->
+  <img id="river-bg" src="assets/river_bg.jpg" alt="River background" aria-hidden="true" />
+
+  <!-- ===== TOP NEURAL CALIBRATION BAR (Defies Physics & Head Tilt) ===== -->
+  <div id="calibration-bar-wrap">
+    <div class="cal-meta">
+      <span class="cal-title mono">⚡ NEURAL CALIBRATION [<span id="cal-status" class="accent">STABILIZING</span>]</span>
+      <span class="cal-posture mono" id="cal-posture-angle">HEAD TILT: 0.0° [LEVEL]</span>
+      <span class="cal-pct mono accent" id="cal-percentage">58.42%</span>
+    </div>
+    <div class="cal-track">
+      <div class="cal-fill" id="cal-fill">
+        <div class="cal-liquid-wave"></div>
+      </div>
+      <div class="cal-goal-marker" title="Impossible 100%">100%</div>
+    </div>
+  </div>
+
+
+  <!-- App Viewport (Shifted by Phantom Scrolling) -->
+  <div id="app-viewport">
+
+  <!-- ===== HEADER BAR ===== -->
+  <header class="top-bar">
+    <div class="logo">
+      <img src="assets/damu.png" alt="Dhashamoolam Damu Logo" class="damu-header-logo" id="damu-header-logo" />
+      <div class="logo-text-group">
+        <span class="logo-text">Dhashamoolam Damu</span>
+        <span class="logo-tagline mono">AI PRODUCTIVITY ENFORCER</span>
+      </div>
+      <span class="logo-version">v3.2.0</span>
+    </div>
+    <div class="status-cluster">
+      <div class="status-pill" id="ai-status">
+        <span class="status-dot" id="status-dot"></span>
+        <span id="status-label">INITIALIZING</span>
+      </div>
+      <div class="status-pill secondary">
+        <span class="mono">FPS</span>
+        <span id="fps-counter" class="mono accent">--</span>
+      </div>
+      <div class="status-pill secondary">
+        <span class="mono">FACES</span>
+        <span id="face-counter" class="mono accent">0</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main-content">
+
+    <!-- Left panel: metrics -->
+    <aside class="metrics-panel">
+      <div class="panel-title">COMPLIANCE METRICS</div>
+
+      <div class="metric-card">
+        <div class="metric-label">Session Time</div>
+        <div class="metric-value mono" id="session-time">00:00:00</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Violations</div>
+        <div class="metric-value mono accent-red" id="violation-count">0</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Compliance Score</div>
+        <div class="metric-value mono" id="compliance-score">100<span class="metric-unit">%</span></div>
+        <div class="compliance-bar">
+          <div class="compliance-fill" id="compliance-fill"></div>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Current State</div>
+        <div class="metric-value mono accent-green" id="current-state">MONITORING</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Mouth Aperture</div>
+        <div class="metric-value mono" id="mouth-aperture">--<span class="metric-unit">px</span></div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Head Rotation</div>
+        <div class="metric-value mono" id="head-rotation">0.00<span class="metric-unit">°</span></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="panel-title">TRIGGER LOG</div>
+      <div class="log-feed" id="log-feed">
+        <div class="log-entry log-info">System boot OK</div>
+        <div class="log-entry log-info">Awaiting cam feed...</div>
+      </div>
+    </aside>
+
+    <!-- Centre: webcam feed + canvas overlay -->
+    <section class="camera-section">
+      <div class="camera-wrapper" id="camera-wrapper">
+
+        <!-- Start screen -->
+        <div class="start-overlay" id="start-overlay">
+          <img src="assets/damu.png" alt="Dhashamoolam Damu" class="damu-start-avatar" />
+          <h1 class="start-title">Dhashamoolam Damu</h1>
+          <p class="start-subtitle">Real-Time Productivity Enforcement System</p>
+          <p class="start-desc">
+            Advanced facial biometric analysis powered by MediaPipe.<br />
+            Any blink, yawn, head turn, or distraction will be <strong>immediately punished</strong>.
+          </p>
+          <button class="btn-start" id="btn-start">
+            <span class="btn-icon">⚡</span>
+            Start Monitoring
+          </button>
+          <p class="start-disclaimer">⚠ Webcam &amp; Audio permissions required. You have been warned.</p>
+        </div>
+
+        <!-- Webcam video -->
+        <video id="webcam" autoplay muted playsinline></video>
+
+        <!-- MediaPipe landmark canvas -->
+        <canvas id="landmark-canvas"></canvas>
+
+        <!-- Violation banner (slides in when triggered) -->
+        <div class="violation-banner" id="violation-banner">
+          <div class="violation-icon" id="violation-icon">⚠</div>
+          <div class="violation-text">
+            <div class="violation-title" id="violation-title">VIOLATION DETECTED</div>
+            <div class="violation-sub" id="violation-sub">Focus breach — Type 1</div>
+          </div>
+        </div>
+
+        <!-- Corner decorations -->
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+
+        <!-- Tracking lines decoration -->
+        <div class="tracking-hud">
+          <div class="hud-label top-left">CAM_01 • LIVE</div>
+          <button class="hud-btn mono" id="btn-pip-toggle" title="Toggle Floating Surveillance Window">🪟 FLOAT PiP</button>
+          <div class="hud-label top-right" id="resolution-label">--×--</div>
+        </div>
+      </div>
+
+      <!-- Below camera: active trigger indicators -->
+      <div class="trigger-indicators">
+        <div class="trigger-badge" id="badge-yawn" data-active="false">
+          <span class="badge-icon">😮</span>
+          <span class="badge-label">YAWN DETECT</span>
+        </div>
+        <div class="trigger-badge" id="badge-look" data-active="false">
+          <span class="badge-icon">👀</span>
+          <span class="badge-label">LOOK-AWAY</span>
+        </div>
+        <div class="trigger-badge" id="badge-work" data-active="false">
+          <span class="badge-icon">⌨️</span>
+          <span class="badge-label">WORK DETECT</span>
+        </div>
+        <div class="trigger-badge" id="badge-dizzy" data-active="false">
+          <span class="badge-icon">🌀</span>
+          <span class="badge-label">MOUSE JIGGLE</span>
+        </div>
+        <div class="trigger-badge" id="badge-cursor" data-active="false">
+          <span class="badge-icon">🖥️</span>
+          <span class="badge-label">CURSOR CHAOS</span>
+        </div>
+        <div class="trigger-badge" id="badge-tilt" data-active="false">
+          <span class="badge-icon">⚖️</span>
+          <span class="badge-label">GRAVITY TILT</span>
+        </div>
+        <div class="trigger-badge" id="badge-pip" data-active="false">
+          <span class="badge-icon">🪟</span>
+          <span class="badge-label">PIP WATCHER</span>
+        </div>
+        <div class="trigger-badge" id="badge-tab" data-active="false">
+          <span class="badge-icon">🚨</span>
+          <span class="badge-label">TAB TREASON</span>
+        </div>
+        <div class="trigger-badge" id="badge-ghost" data-active="false">
+          <span class="badge-icon">👻</span>
+          <span class="badge-label">ESCAPE TRAP</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right panel: info / guide -->
+    <aside class="info-panel">
+      <div class="panel-title">ENFORCEMENT RULES</div>
+
+      <div class="rule-card rule-yawn">
+        <div class="rule-header">
+          <span class="rule-badge">01</span>
+          <span class="rule-name">GANGEEE MODE</span>
+        </div>
+        <p class="rule-desc">Yawning + sweat-drop vfx on canvas. Triggers sepia shake + <em>gangeee</em> audio + comic popup.</p>
+        <div class="rule-threshold">
+          <span class="mono">Threshold:</span>
+          <span class="mono accent">Δlip &gt; 6%</span>
+        </div>
+      </div>
+
+      <div class="rule-card rule-look">
+        <div class="rule-header">
+          <span class="rule-badge">02</span>
+          <span class="rule-name">EDA MONE MODE</span>
+        </div>
+        <p class="rule-desc">Head-turn or eye-gaze detected. Speed lines + camera zoom + anger vein 💢 + laser eyes.</p>
+        <div class="rule-threshold">
+          <span class="mono">Threshold:</span>
+          <span class="mono accent">Offset &gt; 30%</span>
+        </div>
+      </div>
+
+      <div class="rule-card rule-work">
+        <div class="rule-header">
+          <span class="rule-badge">03</span>
+          <span class="rule-name">KEYSTROKE TRAP</span>
+        </div>
+        <p class="rule-desc">Any keypress = police tape banner + Amba pop-up (amba.png) + keyboard.mp3. Working is strictly forbidden.</p>
+        <div class="rule-threshold">
+          <span class="mono">Threshold:</span>
+          <span class="mono accent">keydown event</span>
+        </div>
+      </div>
+
+      <div class="rule-card rule-dizzy">
+        <div class="rule-header">
+          <span class="rule-badge">04</span>
+          <span class="rule-name">MOUSE JIGGLE</span>
+        </div>
+        <p class="rule-desc">Fast mouse movement triggers psychedelic dizzy-swirl filter until mouse stops.</p>
+        <div class="rule-threshold">
+          <span class="mono">Threshold:</span>
+          <span class="mono accent">&gt;1.5 px/ms</span>
+        </div>
+      </div>
+
+      <div class="rule-card rule-cursor">
+        <div class="rule-header">
+          <span class="rule-badge">05</span>
+          <span class="rule-name">FAFA POPUP</span>
+        </div>
+        <p class="rule-desc">Any cursor movement triggers a big FaFa pop-up jump. Stop moving to make him disappear.</p>
+        <div class="rule-threshold">
+          <span class="mono">Trigger:</span>
+          <span class="mono accent">cursor movement</span>
+        </div>
+      </div>
+
+      <div class="rule-card" style="--left-bar: var(--accent-green)">
+        <div class="rule-header">
+          <span class="rule-badge" style="color:var(--accent-green)">06</span>
+          <span class="rule-name">COMPLIANCE MONITOR</span>
+        </div>
+        <p class="rule-desc">When you obey — staring blankly, doing nothing — 3D spatial mosquito orbits your ears. If you turn to look, it dodges behind you.</p>
+        <div class="rule-threshold">
+          <span class="mono">Condition:</span>
+          <span class="mono accent">no violation</span>
+        </div>
+      </div>
+
+      <div class="rule-card rule-tilt">
+        <div class="rule-header">
+          <span class="rule-badge">07</span>
+          <span class="rule-name">GRAVITY HEAD TILT</span>
+        </div>
+        <p class="rule-desc">Calibration bar approaches 99% but spills backward if head tilts beyond &plusmn;20&deg;, triggering tilt.mp3. Never hits 100%.</p>
+        <div class="rule-threshold">
+          <span class="mono">Threshold:</span>
+          <span class="mono accent">tilt &gt; &plusmn;20.0&deg;</span>
+        </div>
+      </div>
+
+      <div class="rule-card rule-pip">
+        <div class="rule-header">
+          <span class="rule-badge">08</span>
+          <span class="rule-name">FLOATING WATCHER</span>
+        </div>
+        <p class="rule-desc">Canvas converts into live stream and locks into Picture-in-Picture window. Bypasses browser throttling when minimized or coding in VS Code.</p>
+        <div class="rule-threshold">
+          <span class="mono">Exploit:</span>
+          <span class="mono accent">PiP API Hack</span>
+        </div>
+      </div>
+
+      <div class="rule-card rule-tab">
+        <div class="rule-header">
+          <span class="rule-badge">09</span>
+          <span class="rule-name">TAB SWITCHING TREASON</span>
+        </div>
+        <p class="rule-desc">Switching tabs or minimizing triggers Page Visibility trap. Blasts dashamoolam1.mp3 simultaneously.</p>
+        <div class="rule-threshold">
+          <span class="mono">Trigger:</span>
+          <span class="mono accent">visibilitychange</span>
+        </div>
+      </div>
+
+      <div class="rule-card rule-ghost">
+        <div class="rule-header">
+          <span class="rule-badge">10</span>
+          <span class="rule-name">WINDOW ESCAPE &amp; STAY TRAP</span>
+        </div>
+        <p class="rule-desc">Attempting to close window triggers a big Fath Ghost pop-up (fath.png) + ghost.mp3 warning. If you choose to stay, stay.mp3 plays.</p>
+        <div class="rule-threshold">
+          <span class="mono">Trigger:</span>
+          <span class="mono accent">beforeunload &amp; stay</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="panel-title">SYSTEM INFO</div>
+      <div class="sys-info-grid">
+        <span class="sys-key mono">Model</span>
+        <span class="sys-val mono">FaceLandmarker</span>
+        <span class="sys-key mono">Landmarks</span>
+        <span class="sys-val mono accent">478 + iris</span>
+        <span class="sys-key mono">Backend</span>
+        <span class="sys-val mono">MediaPipe WASM</span>
+        <span class="sys-key mono">Mode</span>
+        <span class="sys-val mono">VIDEO</span>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="bottom-bar">
+    <span class="mono">Dhashamoolam Damu © 2026</span>
+    <span class="mono accent">Made with 💀 at TinkerHub Useless Projects</span>
+    <span class="mono">All violations are permanent</span>
+  </footer>
+
+  </div> <!-- end #app-viewport -->
+
+  <!-- Hidden video for Picture-in-Picture streaming exploit -->
+  <video id="pip-video" autoplay muted playsinline style="position:fixed; bottom:-9999px; left:-9999px; width:320px; height:240px; pointer-events:none; opacity:0;"></video>
+
+  <!-- Hidden audio elements -->
+  <audio id="audio-gangeee" src="assets/gangeee.mp3" preload="auto"></audio>
+  <audio id="audio-eda-mone" src="assets/eda_mone.mp3" preload="auto" loop></audio>
+  <audio id="audio-mosquito" src="assets/mosquito.mp3" preload="auto" loop></audio>
+  <audio id="audio-dashamoolam" src="assets/dashamoolam1.mp3" preload="auto" loop></audio>
+  <audio id="audio-second" src="assets/second.mp3" preload="auto" loop></audio>
+  <audio id="audio-ghost" src="assets/ghost.mp3" preload="auto"></audio>
+  <audio id="audio-keyboard" src="assets/keyboard.mp3" preload="auto"></audio>
+  <audio id="audio-mouse" src="assets/mouse.mp3" preload="auto"></audio>
+  <audio id="audio-stay" src="assets/stay.mp3" preload="auto"></audio>
+  <audio id="audio-tilt" src="assets/tilt.mp3" preload="auto"></audio>
+  <audio id="audio-intro" src="assets/intro.mp3" preload="auto"></audio>
+
+  <!-- Fake cursor container (cursor chaos mode) -->
+  <div id="cursor-container" aria-hidden="true"></div>
+
+  <!-- Big FaFa Pop-up Element on Cursor Movement -->
+  <div id="fafa-popup" class="fafa-popup" aria-hidden="true">
+    <img src="assets/fafa.png" alt="FaFa" id="fafa-popup-img">
+  </div>
+
+  <!-- Big Ghost (Fath) Pop-up Element on Escape Attempt -->
+  <div id="ghost-popup" class="ghost-popup" aria-hidden="true">
+    <img src="assets/fath.png" alt="Ghost Fath" id="ghost-popup-img">
+  </div>
+
+  <!-- Amba Pop-up Element on Keyboard Keystroke -->
+  <div id="amba-popup" class="amba-popup" aria-hidden="true">
+    <img src="assets/amba.png" alt="Amba" id="amba-popup-img">
+  </div>
+
+</body>
+</html>

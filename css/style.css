@@ -1,0 +1,1755 @@
+/* =========================================================
+   ProctorAI — Productivity Enforcer
+   style.css
+   ========================================================= */
+
+/* ----------------------------------------------------------
+   0. CSS Custom Properties (Design Tokens)
+   ---------------------------------------------------------- */
+:root {
+  /* Golden Yellow Cartoon Theme Tokens */
+  --gold-primary:   #ffd000;
+  --gold-vibrant:   #ffea00;
+  --gold-amber:     #ffaa00;
+  --comic-orange:   #ff5500;
+  --comic-red:      #ff2244;
+  --comic-black:    #000000;
+
+  --bg-void:     #140d04;
+  --bg-base:     rgba(18, 12, 5, 0.92);
+  --bg-surface:  rgba(24, 16, 6, 0.90);
+  --bg-elevated: #221607;
+  --bg-card:     #281a08;
+
+  --accent-green:  #ffd000;
+  --accent-green2: #ffea00;
+  --accent-red:    #ff2244;
+  --accent-amber:  #ffaa00;
+  --accent-blue:   #ffaa00;
+  --accent-cyan:   #ffd000;
+
+  --text-primary:   #ffffff;
+  --text-secondary: #fff4cc;
+  --text-muted:     #ffdf88;
+
+  --border-subtle:  rgba(255,208,0,0.22);
+  --border-medium:  rgba(255,208,0,0.45);
+  --border-accent:  #ffd000;
+
+  --font-comic: 'Bangers', cursive, sans-serif;
+  --font-sans:  'Fredoka', 'Inter', system-ui, sans-serif;
+  --font-mono:  'JetBrains Mono', 'Fira Code', monospace;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  --shadow-card: 4px 4px 0px #000000;
+  --shadow-glow-green: 0 0 25px rgba(255,208,0,0.4);
+  --shadow-glow-red:   0 0 30px rgba(255,34,68,0.5);
+
+  --transition-fast: 0.15s ease;
+  --transition-med:  0.3s ease;
+}
+
+/* ----------------------------------------------------------
+   1. Reset & Base
+   ---------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 14px;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #fca311;
+  background-image: url('../assets/bgd.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  color: var(--text-primary);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  transition: filter 0.4s ease;
+}
+
+/* ----------------------------------------------------------
+   2. Scanlines Overlay
+   ---------------------------------------------------------- */
+.scanlines {
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.15) 2px,
+    rgba(0,0,0,0.15) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: multiply;
+}
+
+/* ----------------------------------------------------------
+   3. River Background (Yawn Mode)
+   ---------------------------------------------------------- */
+#river-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  z-index: 1;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  filter: blur(2px) saturate(0.7);
+}
+
+body.yawn-mode #river-bg {
+  opacity: 0.4;
+}
+
+/* ----------------------------------------------------------
+   4. Header Bar
+   ---------------------------------------------------------- */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 20px;
+  min-height: 56px;
+  background: rgba(20, 14, 6, 0.94);
+  border-bottom: 3.5px solid #000;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
+  flex-shrink: 0;
+  z-index: 100;
+  position: sticky;
+  top: 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.damu-header-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #000;
+  box-shadow: 3px 3px 0px var(--gold-primary);
+  flex-shrink: 0;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.damu-header-logo:hover {
+  transform: scale(1.15) rotate(-6deg);
+}
+
+.logo-text-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.logo-text {
+  font-family: var(--font-comic);
+  font-weight: 900;
+  font-size: 1.45rem;
+  color: var(--gold-primary);
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  text-shadow: 2px 2px 0 #000, -1px -1px 0 #000;
+}
+
+.logo-tagline {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: #ffeb99;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.logo-version {
+  font-family: var(--font-comic);
+  font-size: 0.75rem;
+  color: #000;
+  background: var(--gold-primary);
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 2px solid #000;
+  margin-left: 6px;
+  box-shadow: 2px 2px 0 #000;
+}
+
+.status-cluster {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+.status-pill.secondary {
+  gap: 8px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: background var(--transition-med);
+}
+
+.status-dot.active {
+  background: var(--accent-green);
+  box-shadow: 0 0 8px var(--accent-green);
+  animation: dot-blink 1.5s ease-in-out infinite;
+}
+
+.status-dot.error {
+  background: var(--accent-red);
+  box-shadow: 0 0 8px var(--accent-red);
+}
+
+@keyframes dot-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ----------------------------------------------------------
+   5. Main Layout
+   ---------------------------------------------------------- */
+.main-content {
+  display: grid;
+  grid-template-columns: 260px 1fr 280px;
+  gap: 0;
+  flex: 1;
+  height: calc(100vh - 56px - 38px);
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+}
+
+/* ----------------------------------------------------------
+   6. Side Panels
+   ---------------------------------------------------------- */
+.metrics-panel,
+.info-panel {
+  background: rgba(22, 15, 6, 0.90);
+  backdrop-filter: blur(14px);
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold-amber) transparent;
+}
+
+.metrics-panel {
+  border-right: 3.5px solid #000;
+}
+
+.info-panel {
+  border-left: 3.5px solid #000;
+}
+
+.panel-title {
+  font-family: var(--font-comic);
+  font-size: 1.2rem;
+  letter-spacing: 0.1em;
+  color: var(--gold-primary);
+  text-shadow: 2px 2px 0 #000;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #000;
+  text-transform: uppercase;
+}
+
+.metric-card {
+  background: #281a08;
+  border: 2.5px solid #000;
+  border-radius: 12px;
+  padding: 10px 12px;
+  box-shadow: 4px 4px 0px var(--gold-primary);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.metric-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--gold-vibrant);
+  border-color: #000;
+}
+
+.metric-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #c8c8dd;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.metric-value {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.metric-unit {
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+  margin-left: 2px;
+}
+
+.compliance-bar {
+  height: 4px;
+  background: var(--bg-elevated);
+  border-radius: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.compliance-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--accent-green2), var(--accent-green));
+  border-radius: 2px;
+  transition: width 0.5s ease, background 0.5s ease;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin: 4px 0;
+}
+
+/* Log feed */
+.log-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  flex: 1;
+}
+
+.log-entry {
+  padding: 3px 6px;
+  border-radius: var(--radius-sm);
+  border-left: 2px solid transparent;
+  line-height: 1.4;
+  animation: log-in 0.2s ease;
+}
+
+@keyframes log-in {
+  from { opacity: 0; transform: translateX(-4px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.log-info  { color: var(--text-secondary); border-left-color: var(--border-medium); }
+.log-warn  { color: var(--accent-amber); border-left-color: var(--accent-amber); background: rgba(255,170,0,0.05); }
+.log-error { color: var(--accent-red); border-left-color: var(--accent-red); background: rgba(255,51,85,0.05); }
+
+/* Info panel */
+.rule-card {
+  background: #281a08;
+  border: 2.5px solid #000;
+  border-radius: 12px;
+  padding: 12px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 4px 4px 0px var(--gold-primary);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.rule-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--gold-vibrant);
+}
+
+.rule-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+}
+
+.rule-yawn::before { background: var(--accent-amber); }
+.rule-look::before { background: var(--accent-red); }
+
+.rule-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.rule-badge {
+  font-family: var(--font-comic);
+  font-size: 0.85rem;
+  font-weight: 900;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--gold-primary);
+  color: #000;
+  border: 2px solid #000;
+  box-shadow: 2px 2px 0px #000;
+  letter-spacing: 0.05em;
+}
+
+.rule-name {
+  font-family: var(--font-comic);
+  font-size: 1.05rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.rule-desc {
+  font-size: 0.78rem;
+  color: #f7ecd9;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.rule-threshold {
+  display: flex;
+  gap: 8px;
+  font-size: 0.68rem;
+  color: #ffd280;
+  font-weight: 600;
+}
+
+.sys-info-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  font-size: 0.6rem;
+}
+
+.sys-key { color: var(--text-muted); }
+.sys-val { color: var(--text-secondary); }
+
+/* ----------------------------------------------------------
+   7. Camera Section
+   ---------------------------------------------------------- */
+.camera-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 20px;
+  gap: 14px;
+  background: transparent;
+  position: relative;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.camera-wrapper {
+  position: relative;
+  width: 95%;
+  max-width: 1060px;
+  max-height: calc(100vh - 190px);
+  aspect-ratio: 16 / 9;
+  background: var(--bg-void);
+  border-radius: 18px;
+  overflow: hidden;
+  border: 4px solid #000;
+  box-shadow: 8px 8px 0px var(--gold-primary), 0 0 35px rgba(255,208,0,0.35);
+  transition: box-shadow 0.4s ease, max-width 0.3s ease;
+}
+
+body.monitoring-active .camera-wrapper {
+  max-width: 1100px;
+}
+
+/* Comic / Anime Screentone overlay texture */
+.camera-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.22) 1.2px, transparent 1.2px);
+  background-size: 8px 8px;
+  opacity: 0.35;
+}
+
+/* Shared */
+#webcam,
+#landmark-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 13px;
+}
+
+#webcam {
+  z-index: 1;
+  transform: scaleX(-1); /* mirror */
+  filter: contrast(1.25) saturate(1.48) brightness(1.05);
+  transition: filter 0.25s ease;
+}
+
+/* Anime Mode Filters */
+body.look-away-mode #webcam {
+  filter: contrast(1.7) saturate(2.4) brightness(0.85) drop-shadow(0 0 25px #ff0044);
+}
+
+body.yawn-mode #webcam {
+  filter: sepia(0.85) contrast(1.6) saturate(2.8) hue-rotate(-25deg);
+}
+
+body.tab-treason-mode #webcam {
+  filter: invert(0.9) contrast(1.8) saturate(2.5) hue-rotate(290deg);
+}
+
+#landmark-canvas {
+  z-index: 2;
+  transform: scaleX(-1); /* mirror matches video */
+}
+
+/* ----------------------------------------------------------
+   8. Start Overlay
+   ---------------------------------------------------------- */
+.start-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--bg-void);
+  text-align: center;
+  padding: 24px 18px;
+  border-radius: var(--radius-lg);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  overflow-y: auto;
+}
+
+.start-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.97);
+}
+
+.start-icon {
+  font-size: 3rem;
+  line-height: 1;
+  filter: grayscale(1);
+  animation: eye-scan 3s ease-in-out infinite;
+}
+
+@keyframes eye-scan {
+  0%, 100% { transform: translateX(-8px); filter: grayscale(1); }
+  50% { transform: translateX(8px); filter: grayscale(0); }
+}
+
+.start-title {
+  font-family: var(--font-mono);
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+
+.start-subtitle {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+}
+
+.start-desc {
+  font-size: 0.85rem;
+  color: #ffffff;
+  line-height: 1.6;
+  max-width: 380px;
+}
+
+.start-desc strong {
+  color: var(--accent-red);
+  font-weight: 700;
+}
+
+.btn-start {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 42px;
+  background: linear-gradient(180deg, #fff244, #ffaa00);
+  color: #000;
+  font-family: var(--font-comic);
+  font-size: 1.45rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 3.5px solid #000;
+  border-radius: 14px;
+  cursor: pointer;
+  box-shadow: 6px 6px 0px #000;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+  margin-top: 8px;
+}
+
+.btn-start:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0px #000;
+  background: linear-gradient(180deg, #ffff66, #ffbb00);
+}
+
+.btn-start:active {
+  transform: translate(3px, 3px);
+  box-shadow: 2px 2px 0px #000;
+}
+
+.btn-icon { font-size: 1.1rem; }
+
+.start-disclaimer {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: #ffaa00;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+/* ----------------------------------------------------------
+   9. HUD Decorations
+   ---------------------------------------------------------- */
+.corner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.corner-tl { top: 10px; left: 10px;  border-top: 2px solid var(--accent-green); border-left: 2px solid var(--accent-green); }
+.corner-tr { top: 10px; right: 10px; border-top: 2px solid var(--accent-green); border-right: 2px solid var(--accent-green); }
+.corner-bl { bottom: 10px; left: 10px;  border-bottom: 2px solid var(--accent-green); border-left: 2px solid var(--accent-green); }
+.corner-br { bottom: 10px; right: 10px; border-bottom: 2px solid var(--accent-green); border-right: 2px solid var(--accent-green); }
+
+.tracking-hud {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.hud-label {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  color: rgba(0, 255, 136, 0.6);
+  padding: 4px 8px;
+}
+
+.top-left  { top: 14px; left: 36px; }
+.top-right { top: 14px; right: 36px; text-align: right; }
+
+/* ----------------------------------------------------------
+   10. Violation Banner
+   ---------------------------------------------------------- */
+.violation-banner {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(120%);
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: rgba(10, 10, 20, 0.92);
+  border: 1px solid var(--accent-red);
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 30px rgba(255, 51, 85, 0.4);
+  backdrop-filter: blur(10px);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  min-width: 280px;
+  white-space: nowrap;
+}
+
+.violation-banner.visible {
+  transform: translateX(-50%) translateY(0);
+}
+
+.violation-icon {
+  font-size: 1.5rem;
+  animation: icon-shake 0.3s ease infinite;
+}
+
+@keyframes icon-shake {
+  0%, 100% { transform: rotate(-10deg); }
+  50%       { transform: rotate(10deg); }
+}
+
+.violation-title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--accent-red);
+}
+
+.violation-sub {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* ----------------------------------------------------------
+   11. Trigger Indicator Badges
+   ---------------------------------------------------------- */
+.trigger-indicators {
+  display: flex;
+  gap: 12px;
+}
+
+.trigger-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: #1e1406;
+  border: 2.5px solid #000;
+  border-radius: 24px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  box-shadow: 3.5px 3.5px 0px var(--gold-primary);
+  transition: all 0.15s cubic-bezier(0.2, 0.9, 0.3, 1.25);
+}
+
+.trigger-badge:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px var(--gold-vibrant);
+  border-color: #000;
+}
+
+.trigger-badge[data-active="true"] {
+  border-color: #000 !important;
+  color: #ffffff !important;
+  background: var(--comic-red) !important;
+  box-shadow: 4px 4px 0px #000, 0 0 20px rgba(255,34,68,0.8) !important;
+  transform: scale(1.06) rotate(-1.5deg);
+  animation: badge-pulse 0.6s ease-in-out infinite;
+}
+
+@keyframes badge-pulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(255,51,85,0.2); }
+  50%       { box-shadow: 0 0 24px rgba(255,51,85,0.5); }
+}
+
+/* ----------------------------------------------------------
+   12. Footer
+   ---------------------------------------------------------- */
+.bottom-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: 40px;
+  background: rgba(20, 14, 6, 0.95);
+  border-top: 3.5px solid #000;
+  box-shadow: 0 -4px 0 rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+  z-index: 10;
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  color: #ffeb99;
+  width: 100%;
+}
+
+/* ----------------------------------------------------------
+   13. Typography Utilities
+   ---------------------------------------------------------- */
+.mono        { font-family: var(--font-mono); }
+.accent      { color: var(--accent-green); }
+.accent-red  { color: var(--accent-red); }
+.accent-green { color: var(--accent-green); }
+
+/* ----------------------------------------------------------
+   14. CHAOS MODES (Trigger Effects)
+   ---------------------------------------------------------- */
+
+/* ----- YAWN / GANGEEE MODE ----- */
+body.yawn-mode {
+  filter: sepia(0.9) brightness(0.45) saturate(1.5);
+  animation: yawn-shake 0.12s ease-in-out infinite;
+}
+
+@keyframes yawn-shake {
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  10%  { transform: translate(-6px, -3px) rotate(-0.5deg); }
+  20%  { transform: translate(6px, 3px) rotate(0.5deg); }
+  30%  { transform: translate(-5px, 4px) rotate(-0.3deg); }
+  40%  { transform: translate(5px, -4px) rotate(0.3deg); }
+  50%  { transform: translate(-7px, 2px) rotate(-0.6deg); }
+  60%  { transform: translate(7px, -2px) rotate(0.6deg); }
+  70%  { transform: translate(-3px, 5px) rotate(-0.2deg); }
+  80%  { transform: translate(3px, -5px) rotate(0.2deg); }
+  90%  { transform: translate(-6px, -3px) rotate(-0.4deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+body.yawn-mode .camera-wrapper {
+  box-shadow: 0 0 60px rgba(120, 80, 20, 0.8);
+}
+
+/* ----- LOOK-AWAY / EDA MONE MODE ----- */
+body.look-away-mode {
+  animation: red-border-flash 0.5s ease-in-out infinite;
+}
+
+@keyframes red-border-flash {
+  0%, 100% { box-shadow: inset 0 0 0 0px var(--accent-red); }
+  50%       { box-shadow: inset 0 0 0 8px var(--accent-red); }
+}
+
+body.look-away-mode::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  border: 6px solid var(--accent-red);
+  border-radius: 0;
+  z-index: 9998;
+  pointer-events: none;
+  animation: border-pulse 0.5s ease-in-out infinite;
+  box-shadow: 0 0 40px rgba(255,51,85,0.6) inset, 0 0 40px rgba(255,51,85,0.3);
+}
+
+@keyframes border-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* ----- Both active ----- */
+body.yawn-mode.look-away-mode {
+  filter: sepia(0.9) brightness(0.35) saturate(2) hue-rotate(15deg);
+  animation: yawn-shake 0.08s ease-in-out infinite, red-border-flash 0.3s ease-in-out infinite;
+}
+
+
+
+/* ----------------------------------------------------------
+   16. Scrollbar
+   ---------------------------------------------------------- */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-accent); }
+
+/* ==========================================================
+   17. ANIME VFX SUITE
+   ========================================================== */
+
+/* ── A. Manga Speed Lines ──────────────────────────────────
+   Full-viewport conic-gradient radial lines, centre masked.
+   Activated on body.look-away-mode
+   ─────────────────────────────────────────────────────── */
+#speed-lines-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 501;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+#speed-lines-overlay::before {
+  content: '';
+  position: absolute;
+  /* bigger than viewport so rotation doesn't show gaps at corners */
+  width: 200vmax;
+  height: 200vmax;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  background: repeating-conic-gradient(
+    rgba(255,255,255,0.55) 0deg 2.5deg,
+    rgba(0,0,0,0.0)       2.5deg 5deg,
+    rgba(0,0,0,0.45)      5deg 7.5deg,
+    rgba(0,0,0,0.0)       7.5deg 12deg
+  );
+  /* hollow centre so we can see the face */
+  -webkit-mask: radial-gradient(ellipse 38% 32% at 50% 50%, transparent 100%, black 100%);
+  mask:         radial-gradient(ellipse 38% 32% at 50% 50%, transparent 100%, black 100%);
+  opacity: 0;
+  transform-origin: 50% 50%;
+  transition: opacity 0.12s ease;
+  animation: speed-spin 0.1s steps(5) infinite paused;
+}
+
+body.look-away-mode #speed-lines-overlay::before {
+  opacity: 1;
+  animation-play-state: running;
+}
+
+@keyframes speed-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(72deg); }
+}
+
+/* Camera punch-zoom on look-away */
+body.look-away-mode .camera-wrapper {
+  transform: scale(1.09);
+  transition: transform 0.12s ease;
+}
+
+body:not(.look-away-mode) .camera-wrapper {
+  transition: transform 0.3s ease;
+}
+
+/* ── B. Comic-Book Sound-Effect Popup ──────────────────────
+   Slams onto screen then bounces out.
+   ─────────────────────────────────────────────────────── */
+#comic-popup {
+  position: fixed;
+  z-index: 8000;
+  pointer-events: none;
+  /* centred by JS */
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  opacity: 0;
+  transform: scale(0.1) rotate(-20deg);
+}
+
+#comic-popup.slam-in {
+  animation: comic-slam 0.45s cubic-bezier(0.22, 1.6, 0.64, 1) forwards;
+}
+
+#comic-popup.slam-out {
+  animation: comic-out 0.28s ease-in forwards;
+}
+
+@keyframes comic-slam {
+  0%   { opacity: 0; transform: scale(0.05) rotate(-20deg); }
+  55%  { opacity: 1; transform: scale(1.28) rotate(4deg); }
+  75%  { transform: scale(0.93) rotate(-2deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes comic-out {
+  from { opacity: 1; transform: scale(1) rotate(0deg); }
+  to   { opacity: 0; transform: scale(1.35) rotate(8deg); }
+}
+
+#comic-popup-inner {
+  display: inline-block;
+  position: relative;
+  padding: 14px 32px;
+  font-family: 'Impact', 'Arial Black', 'JetBrains Mono', sans-serif;
+  font-size: clamp(3rem, 9vw, 7rem);
+  font-weight: 900;
+  color: #fff;
+  text-shadow:
+    5px 5px 0 #000,
+    -3px -3px 0 #000,
+    3px -3px 0 #000,
+    -3px 3px 0 #000,
+    0 8px 0 rgba(0,0,0,0.35);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Spiky starburst background via clip-path */
+#comic-popup-inner::before {
+  content: '';
+  position: absolute;
+  inset: -16px;
+  background: var(--comic-color, #ff2244);
+  border: 5px solid #000;
+  border-radius: 6px;
+  z-index: -1;
+  transform: rotate(-2deg);
+  box-shadow: 8px 8px 0 rgba(0,0,0,0.55);
+  clip-path: polygon(
+    50% 0%,   60% 5%, 70% 0%, 75% 8%, 85% 4%, 86% 14%,
+    100% 15%, 95% 25%, 100% 35%, 90% 38%, 95% 50%,
+    88% 55%, 95% 65%, 85% 67%, 90% 80%, 78% 78%,
+    75% 92%, 64% 86%, 55% 95%, 50% 88%, 45% 95%,
+    36% 86%, 25% 92%, 22% 78%, 10% 80%, 15% 67%,
+    5% 65%, 12% 55%, 5% 50%, 10% 38%, 0% 35%,
+    5% 25%, 0% 15%, 14% 14%, 15% 4%, 25% 8%,
+    30% 0%, 40% 5%
+  );
+}
+
+/* Shockwave ring */
+#comic-popup-inner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 5px solid var(--comic-color, #ff2244);
+  border-radius: 8px;
+  opacity: 0;
+  animation: shockwave-ring 0.45s ease 0.05s forwards;
+}
+
+@keyframes shockwave-ring {
+  0%   { inset: -5px;  opacity: 0.9; }
+  100% { inset: -60px; opacity: 0;   }
+}
+
+/* ── C. Work Alert — Police Tape (Keystroke Trap) ──────────
+   Yellow/black hazard strips + blinking message.
+   ─────────────────────────────────────────────────────── */
+#work-alert-banner {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  right: 0;
+  translate: 0 -50%;
+  z-index: 9000;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  transform: scaleY(0);
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: center;
+}
+
+#work-alert-banner.visible {
+  transform: scaleY(1);
+}
+
+.police-tape-strip {
+  background: repeating-linear-gradient(
+    -45deg,
+    #ffcc00 0px, #ffcc00 26px,
+    #111    26px, #111    52px
+  );
+  padding: 10px 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.police-tape-text {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-weight: 900;
+  font-size: 0.9rem;
+  letter-spacing: 0.18em;
+  color: #000;
+  background: #ffcc00;
+  padding: 2px 20px;
+  animation: tape-scroll 3.5s linear infinite;
+}
+
+/* Reverse direction for 2nd strip */
+.police-tape-strip:nth-child(3) .police-tape-text {
+  animation-direction: reverse;
+}
+
+@keyframes tape-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.work-alert-center {
+  background: rgba(0,0,0,0.94);
+  border-top: 5px solid #ffcc00;
+  border-bottom: 5px solid #ffcc00;
+  padding: 18px 0;
+  text-align: center;
+  backdrop-filter: blur(6px);
+}
+
+.work-alert-title {
+  font-family: var(--font-mono);
+  font-size: clamp(0.9rem, 2.5vw, 1.5rem);
+  font-weight: 900;
+  color: var(--accent-amber);
+  letter-spacing: 0.1em;
+  animation: work-blink 0.25s steps(1) infinite;
+}
+
+@keyframes work-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.work-alert-sub {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin-top: 6px;
+  letter-spacing: 0.08em;
+}
+
+/* Yellow border flash on body when work triggered */
+body.work-alert-mode::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  border: 8px solid #ffcc00;
+  z-index: 9998;
+  pointer-events: none;
+  animation: work-border 0.18s ease-in-out infinite;
+  box-shadow: 0 0 50px rgba(255,204,0,0.4) inset;
+}
+
+@keyframes work-border {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.15; }
+}
+
+/* ── D. Dizzy Mode — Mouse Jiggle ──────────────────────────
+   Psychedelic hue-rotate blur filter on body.
+   ─────────────────────────────────────────────────────── */
+body.dizzy-mode {
+  animation: dizzy-hue 0.8s linear infinite;
+}
+
+body.dizzy-mode .camera-wrapper {
+  animation: dizzy-wobble 0.35s ease-in-out infinite;
+}
+
+@keyframes dizzy-hue {
+  0%   { filter: hue-rotate(0deg)   blur(1px) saturate(2.5); }
+  33%  { filter: hue-rotate(120deg) blur(2px) saturate(3);   }
+  66%  { filter: hue-rotate(240deg) blur(1px) saturate(2.5); }
+  100% { filter: hue-rotate(360deg) blur(1px) saturate(2);   }
+}
+
+@keyframes dizzy-wobble {
+  0%, 100% { transform: rotate(-2.5deg) scale(1.03); }
+  25%       { transform: rotate( 2.5deg) scale(0.97); }
+  75%       { transform: rotate(-1deg)   scale(1.01); }
+}
+
+/* Dizzy mode overrides yawn/look-away filters when combined */
+body.dizzy-mode.yawn-mode,
+body.dizzy-mode.look-away-mode {
+  animation: dizzy-hue 0.6s linear infinite;
+}
+
+/* ── E. Per-Trigger Badge Colours (new triggers) ───────── */
+#badge-work[data-active="true"] {
+  border-color: var(--accent-amber) !important;
+  color: var(--accent-amber) !important;
+  background: rgba(255,170,0,0.12) !important;
+  box-shadow: 0 0 14px rgba(255,170,0,0.3) !important;
+  animation: badge-pulse-amber 0.7s ease-in-out infinite !important;
+}
+
+@keyframes badge-pulse-amber {
+  0%, 100% { box-shadow: 0 0 10px rgba(255,170,0,0.2); }
+  50%       { box-shadow: 0 0 22px rgba(255,170,0,0.6); }
+}
+
+#badge-dizzy[data-active="true"] {
+  border-color: var(--accent-blue) !important;
+  color: var(--accent-blue) !important;
+  background: rgba(0,170,255,0.12) !important;
+  box-shadow: 0 0 14px rgba(0,170,255,0.3) !important;
+  animation: badge-pulse-blue 0.7s ease-in-out infinite !important;
+}
+
+@keyframes badge-pulse-blue {
+  0%, 100% { box-shadow: 0 0 10px rgba(0,170,255,0.2); }
+  50%       { box-shadow: 0 0 22px rgba(0,170,255,0.6); }
+}
+
+/* ── F. Rule cards for new triggers ───────────────────── */
+.rule-work::before  { background: var(--accent-amber); }
+.rule-dizzy::before { background: var(--accent-blue); }
+
+/* ── G. Eye-gaze metric pulse on look-away ───────────── */
+body.look-away-mode #head-rotation {
+  color: var(--accent-red);
+  text-shadow: 0 0 8px rgba(255,51,85,0.6);
+}
+
+/* ==========================================================
+   18. CURSOR CHAOS + COMPLIANCE MONITOR
+   ========================================================== */
+
+/* ── Cursor Chaos: hide the real cursor everywhere ────── */
+body.cursor-chaos,
+body.cursor-chaos * {
+  cursor: none !important;
+}
+
+/* ── Fake Cursors ─────────────────────────────────────── */
+#cursor-container {
+  position: fixed;
+  inset: 0;
+  z-index: 99990;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ── Big FaFa Pop-Up (Cursor Movement) ─────────────────── */
+.fafa-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 99999;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.fafa-popup.visible {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  visibility: visible;
+}
+
+#fafa-popup-img {
+  width: clamp(280px, 44vw, 520px);
+  max-height: 65vh;
+  object-fit: contain;
+  display: block;
+}
+
+/* ── Big Ghost / Fath Pop-Up (Escape Attempt) ───────────── */
+.ghost-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 99999;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.ghost-popup.visible {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  visibility: visible;
+}
+
+#ghost-popup-img {
+  width: clamp(280px, 44vw, 520px);
+  max-height: 65vh;
+  object-fit: contain;
+  display: block;
+}
+
+/* ── Amba Pop-Up (Keyboard Keystroke Trap) ─────────────── */
+.amba-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 99999;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 0.26s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.18s ease, visibility 0.18s ease;
+}
+
+.amba-popup.visible {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  visibility: visible;
+}
+
+#amba-popup-img {
+  width: clamp(190px, 28vw, 340px);
+  max-height: 44vh;
+  object-fit: contain;
+  display: block;
+}
+
+/* ── Cursor badge colour ─────────────────────────────── */
+#badge-cursor[data-active="true"] {
+  border-color: #ff6600 !important;
+  color: #ff6600 !important;
+  background: rgba(255,102,0,0.12) !important;
+  box-shadow: 0 0 14px rgba(255,102,0,0.35) !important;
+  animation: badge-pulse-orange 0.5s ease-in-out infinite !important;
+}
+
+@keyframes badge-pulse-orange {
+  0%, 100% { box-shadow: 0 0 10px rgba(255,102,0,0.2); }
+  50%       { box-shadow: 0 0 26px rgba(255,102,0,0.7); }
+}
+
+.rule-cursor::before { background: #ff6600; }
+
+/* ── Compliance / Mosquito mode ──────────────────────── */
+/* Subtle green tint pulsing — you're doing what it wants */
+body.mosquito-mode .camera-wrapper {
+  box-shadow: 0 0 40px rgba(0, 255, 100, 0.15), var(--shadow-card);
+  animation: mosquito-glow 2.5s ease-in-out infinite;
+}
+
+@keyframes mosquito-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(0,255,100,0.08), var(--shadow-card); }
+  50%       { box-shadow: 0 0 55px rgba(0,255,100,0.22), var(--shadow-card); }
+}
+
+/* Status label flickers uncomfortably */
+body.mosquito-mode #current-state {
+  animation: mosquito-status-flicker 1.8s ease-in-out infinite;
+}
+
+@keyframes mosquito-status-flicker {
+  0%, 45%, 55%, 100% { opacity: 1; }
+  50%                 { opacity: 0.35; }
+}
+
+/* ==========================================================
+   19. PHANTOM SCROLLING & VIEWPORT ENGINE
+   ========================================================== */
+#app-viewport {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  position: relative;
+  min-height: 0;
+}
+
+/* Viewport Engine */
+
+/* Cursor elimination */
+body.cursor-none,
+body.cursor-none * {
+  cursor: none !important;
+}
+
+
+/* ==========================================================
+   21. NEURAL CALIBRATION PROGRESS BAR (Defies Physics)
+   ========================================================== */
+#calibration-bar-wrap {
+  position: relative;
+  width: 100%;
+  background: var(--bg-void);
+  border-bottom: 1px solid var(--border-medium);
+  padding: 6px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 105;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.5);
+  transition: background 0.2s ease;
+}
+
+.cal-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+}
+
+.cal-title {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.cal-posture {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  font-weight: 600;
+}
+
+.cal-pct {
+  font-weight: 700;
+  font-size: 0.72rem;
+  min-width: 65px;
+  text-align: right;
+}
+
+.cal-track {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.cal-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 58.42%;
+  background: linear-gradient(90deg, #00bb66, var(--accent-green), var(--accent-cyan));
+  box-shadow: 0 0 12px rgba(0, 255, 136, 0.4);
+  border-radius: 3px;
+  transform-origin: left center;
+  transform: rotate(var(--liquid-tilt, 0deg));
+  transition: width 0.12s linear, transform 0.08s ease-out;
+}
+
+.cal-liquid-wave {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent 0px,
+    transparent 6px,
+    rgba(255,255,255,0.18) 6px,
+    rgba(255,255,255,0.18) 12px
+  );
+  animation: liquid-stream 1.2s linear infinite;
+}
+
+@keyframes liquid-stream {
+  from { background-position: 0 0; }
+  to   { background-position: 24px 0; }
+}
+
+.cal-goal-marker {
+  position: absolute;
+  right: 0;
+  top: -12px;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  color: var(--accent-amber);
+  opacity: 0.7;
+}
+
+/* Liquid Spillage effect */
+#calibration-bar-wrap.spilling {
+  background: rgba(255, 51, 85, 0.15);
+  border-bottom-color: var(--accent-red);
+}
+
+#calibration-bar-wrap.spilling .cal-fill {
+  background: linear-gradient(90deg, #ff2244, #ff8800);
+  box-shadow: 0 0 20px rgba(255, 51, 85, 0.8);
+  filter: blur(0.5px);
+}
+
+#calibration-bar-wrap.spilling #cal-posture-angle {
+  color: var(--accent-red);
+  border-color: var(--accent-red);
+  animation: badge-pulse-amber 0.3s ease-in-out infinite;
+}
+
+/* ==========================================================
+   22. NEW TRIGGER BADGES & RULE CARDS
+   ========================================================== */
+#badge-tilt[data-active="true"] {
+  border-color: var(--accent-cyan) !important;
+  color: var(--accent-cyan) !important;
+  background: rgba(0,238,255,0.15) !important;
+  box-shadow: 0 0 16px rgba(0,238,255,0.4) !important;
+  animation: badge-pulse-blue 0.6s infinite !important;
+}
+
+.rule-tilt::before    { background: var(--accent-cyan); }
+.rule-pip::before     { background: var(--accent-blue); }
+.rule-tab::before     { background: var(--accent-red); }
+.rule-ghost::before   { background: #b185db; }
+
+/* ── HUD PiP Toggle Button ────────────────────────────── */
+.hud-btn {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 10, 20, 0.85);
+  border: 1px solid var(--border-accent);
+  color: var(--accent-green);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 4px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+
+.hud-btn:hover {
+  background: var(--accent-green);
+  color: #000;
+  box-shadow: 0 0 16px rgba(0,255,136,0.5);
+  transform: translateX(-50%) scale(1.05);
+}
+
+/* ── PiP Badge ────────────────────────────────────────── */
+#badge-pip[data-active="true"] {
+  border-color: var(--accent-blue) !important;
+  color: var(--accent-blue) !important;
+  background: rgba(0,170,255,0.15) !important;
+  box-shadow: 0 0 16px rgba(0,170,255,0.4) !important;
+  animation: badge-pulse-blue 0.8s infinite !important;
+}
+
+/* ── Tab Treason Badge & Mode ─────────────────────────── */
+#badge-tab[data-active="true"] {
+  border-color: var(--accent-red) !important;
+  color: var(--accent-red) !important;
+  background: rgba(255,51,85,0.2) !important;
+  box-shadow: 0 0 20px rgba(255,51,85,0.6) !important;
+  animation: badge-pulse 0.4s infinite !important;
+}
+
+body.tab-treason-mode {
+  animation: treason-flash 0.5s ease-in-out infinite;
+}
+
+@keyframes treason-flash {
+  0%, 100% { filter: brightness(1) contrast(1); }
+  50%       { filter: brightness(0.6) contrast(1.5) hue-rotate(320deg); }
+}
+
+/* ── Start Overlay Damu Avatar ────────────────────────── */
+.damu-start-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--accent-green);
+  box-shadow: 0 0 24px rgba(0, 255, 136, 0.5);
+  margin-bottom: 6px;
+  animation: logo-pulse 3s ease-in-out infinite;
+}
+
+/* ==========================================================
+   23. MOBILE & TABLET RESPONSIVENESS
+   ========================================================== */
+@media (max-width: 900px) {
+  html, body {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    background-image: url('../assets/bgm.png') !important;
+    background-size: cover !important;
+    background-position: center top !important;
+    background-attachment: scroll !important;
+  }
+
+  #app-viewport {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100vh !important;
+    position: static !important;
+    overflow: visible !important;
+  }
+
+  .main-content {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: auto !important;
+    flex: none !important;
+    overflow: visible !important;
+    width: 100% !important;
+    transform: none !important;
+    position: static !important;
+  }
+
+  .camera-section {
+    order: 1 !important;
+    padding: 14px 10px !important;
+    width: 100% !important;
+    height: auto !important;
+    flex: none !important;
+  }
+
+  .camera-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 380px !important;
+    max-height: none !important;
+    aspect-ratio: auto !important;
+  }
+
+  .trigger-indicators {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .metrics-panel {
+    order: 2 !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    flex: none !important;
+    overflow: visible !important;
+    border-right: none !important;
+    border-left: none !important;
+    border-top: 3.5px solid #000 !important;
+    border-bottom: 3.5px solid #000 !important;
+    padding: 18px 14px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  .info-panel {
+    order: 3 !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    flex: none !important;
+    overflow: visible !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 3.5px solid #000 !important;
+    padding: 18px 14px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  .bottom-bar {
+    order: 4 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    padding: 24px 16px !important;
+    height: auto !important;
+    min-height: 60px !important;
+    flex: none !important;
+    position: static !important;
+    margin-top: 24px !important;
+    margin-bottom: 0 !important;
+    background: rgba(20, 14, 6, 0.96) !important;
+    border-top: 3.5px solid #000 !important;
+    text-align: center !important;
+    clear: both !important;
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .top-bar {
+    padding: 8px 12px;
+  }
+
+  .damu-header-logo {
+    width: 32px;
+    height: 32px;
+  }
+
+  .logo-text {
+    font-size: 0.95rem;
+  }
+
+  .logo-tagline {
+    font-size: 0.48rem;
+  }
+
+  .logo-version {
+    display: none;
+  }
+
+  .status-pill.secondary {
+    display: none;
+  }
+
+  .camera-wrapper {
+    min-height: 400px !important;
+  }
+
+  .start-overlay {
+    padding: 16px 12px;
+    gap: 8px;
+  }
+
+  .damu-start-avatar {
+    width: 66px;
+    height: 66px;
+    margin-bottom: 2px;
+  }
+
+  .start-title {
+    font-size: 1.45rem;
+  }
+
+  .start-subtitle {
+    font-size: 0.68rem;
+  }
+
+  .start-desc {
+    font-size: 0.78rem;
+    line-height: 1.45;
+  }
+
+  .btn-start {
+    padding: 11px 24px;
+    font-size: 0.9rem;
+    width: 100%;
+    max-width: 240px;
+  }
+
+  #calibration-bar-wrap {
+    padding: 5px 10px;
+  }
+
+  .cal-meta {
+    font-size: 0.58rem;
+    gap: 4px;
+  }
+
+  .cal-posture {
+    font-size: 0.54rem;
+    padding: 2px 6px;
+  }
+}
+
+
+
+
