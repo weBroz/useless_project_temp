@@ -78,14 +78,40 @@ npx serve .
 For Software:
 
 #### Screenshots
-![Screenshot1](assets/damu.png)
-*Main Enforcement Interface: Cel-shaded webcam feed with 478 facial landmarks, real-time compliance telemetry, and comic pop-art HUD.*
 
-![Screenshot2](assets/bgd.png)
-*Vibrant Golden Cartoon Aesthetic & Anti-Productivity Theme with manga speedlines and pop-up triggers.*
+![Home Dashboard](screenshotsandrecording/homepage.png)
+*Home Screen: Comic pop-art anti-productivity dashboard with telemetry monitors and activation controls.*
 
-![Screenshot3](assets/fafa.png)
-*Dynamic Meme Pop-up System (FaFa, Fath Ghost, and Amba) deployed on unauthorized movement and keystrokes.*
+![Baseline Stare & Mosquito Audio](screenshotsandrecording/mosquitosound.png)
+*Baseline Compliance: 478-point MediaPipe face mesh tracking staring compliance paired with 3D spatial mosquito audio.*
+
+![Head Tilt Detection](screenshotsandrecording/callingoutontiltinghead.png)
+*Gravity Tilt Violation: Triggered when tilting head past 20° off-axis with audio alert.*
+
+![Look-Away Detection](screenshotsandrecording/callingoutonlookingaway.png)
+*Eda Mone Mode: Triggered on gaze aversion or looking away from the screen.*
+
+![Yawn & Mouth Open Detection](screenshotsandrecording/songonmouthopen.png)
+*Gangeee Mode: Sepia vibration and meme audio triggered upon opening mouth or yawning.*
+
+![Mouse Movement Trap](screenshotsandrecording/onmousemovement.png)
+*Cursor Chaos: Moving the mouse spawns the full-screen FaFa meme overlay.*
+
+![Keyboard Keystroke Trap](screenshotsandrecording/ifpressanykeyofkeyboard.png)
+*Anti-Work Keystroke Detection: Typing triggers crime scene police tape and Amba popup.*
+
+![Navbar & Window Edge Warning](screenshotsandrecording/iftrytogotonavbar.png)
+*Boundary Interception: Moving cursor towards browser tabs or URL bar triggers escape warning.*
+
+![Tab Treason Background Alert](screenshotsandrecording/callingoutinbgifichange.png)
+*Tab Treason: Switching tabs or minimizing window blares Dashamoolam audio in the background.*
+
+![Exit Trap with Ghost Modal](screenshotsandrecording/iftrytoexit.png)
+*Window Escape Trap: Attempting to close tab or window deploys Fath Ghost popup with high-priority audio.*
+
+![Appreciation on Return](screenshotsandrecording/appreciatingonreturn.png)
+*Stay & Surrender: Canceling exit or returning to the page triggers priority stay appreciation.*
+
 
 #### Diagrams
 ```mermaid
