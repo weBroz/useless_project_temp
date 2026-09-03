@@ -146,7 +146,7 @@ flowchart TD
 *Demonstration of MediaPipe real-time face tracking, tab treason interceptors, cursor deletion, and Malayalam meme punishment audio.*
 
 #### Additional Demos
-[Add any extra demo materials/links]
+- Check out the high-resolution feature screenshots in the [`screenshotsandrecording/`](screenshotsandrecording/) directory.
 
 ---
 
