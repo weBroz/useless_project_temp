@@ -9,6 +9,9 @@
 ### Team Members
 - Team Lead: Gautham Anil - Model Engineering College
 
+### Hosted Project Link
+🔗 **[https://uselessprojectdhashamoolamdamu.vercel.app/](https://uselessprojectdhashamoolamdamu.vercel.app/)**
+
 ### Project Description
 Project Dashamoolam Damu is a state-of-the-art time-wasting engine disguised as a premium productivity SaaS. Leveraging MediaPipe facial telemetry and browser event traps, it forces users into a mandatory vegetative state. The core objective is to reduce productivity to absolute zero. If the user attempts to type, move their mouse, or switch tabs to actually do work, the app punishes them with immediate Malayalam meme jump-scares, screen-shaking CSS feedback, and cursor deletion. It provides absolutely zero ROI, solves no real-world problems, and guarantees that any time spent using it is permanently wasted.
 
@@ -109,6 +112,9 @@ flowchart TD
 ---
 
 ### Project Demo
+#### Live Deployment
+🔗 **[https://uselessprojectdhashamoolamdamu.vercel.app/](https://uselessprojectdhashamoolamdamu.vercel.app/)**
+
 #### Video
 [Add your demo video link here]
 *Demonstration of MediaPipe real-time face tracking, tab treason interceptors, cursor deletion, and Malayalam meme punishment audio.*
