@@ -142,7 +142,7 @@ flowchart TD
 🔗 **[https://uselessprojectdhashamoolamdamu.vercel.app/](https://uselessprojectdhashamoolamdamu.vercel.app/)**
 
 #### Video
-[Add your demo video link here]
+🎥 **[Watch Demo Recording on Google Drive](https://drive.google.com/file/d/1LQwxlVHHORcjg8Y6sfJLaSJXjjsnAe2U/view?usp=sharing)**
 *Demonstration of MediaPipe real-time face tracking, tab treason interceptors, cursor deletion, and Malayalam meme punishment audio.*
 
 #### Additional Demos
