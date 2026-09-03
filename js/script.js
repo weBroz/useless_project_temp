@@ -508,15 +508,13 @@ function playExclusiveAudio(newAudio, loop = false) {
   if (!newAudio || !audioCtx) return;
 
   // STRICT PRIORITY LOCKS:
-  // 1. GHOST HAS SUPREME PRIORITY:
-  // Nothing (not Stay, mouse, keyboard, tilt) can cut off Ghost while active/playing.
-  // (Only Tab Treason / switching away can interrupt it).
-  if ((ghostLockActive || currentPlayingAudio === audioGhost) && newAudio !== audioGhost && newAudio !== audioDashamoolam) {
+  // 1. GHOST LOCK: Mouse, keyboard, tilt cannot interrupt ghost.mp3.
+  // BUT choosing to stay (audioStay) or switching tabs (audioDashamoolam) can transition it!
+  if (ghostLockActive && newAudio !== audioGhost && newAudio !== audioStay && newAudio !== audioDashamoolam) {
     return;
   }
 
-  // 2. STAY HAS 2ND HIGHEST PRIORITY:
-  // Stay cannot be interrupted by mouse, keyboard, tilt, or mosquito (only Ghost or Tab Treason).
+  // 2. STAY LOCK: stay.mp3 has priority over mouse, keyboard, tilt, and baseline mosquito!
   if (stayLockActive && newAudio !== audioStay && newAudio !== audioGhost && newAudio !== audioDashamoolam) {
     return;
   }
@@ -1667,7 +1665,10 @@ function deactivateTabSwitchPunishment() {
   badgeTab.setAttribute('data-active', 'false');
   document.body.classList.remove('tab-treason-mode');
 
-  log("Tab restored. Return to baseline surveillance.", "info");
+  log("Tab restored. User returned to surveillance. Playing stay.mp3 ✓", "info");
+
+  // Play stay audio immediately upon returning from another tab/page!
+  playStayAudio();
 }
 
 // Minimize & tab switch detection
@@ -1756,27 +1757,12 @@ function playGhostSolo() {
 function playStayAudio() {
   if (!audioCtx || !audioStay) return;
 
-  // GHOST HAS HIGHEST PRIORITY OVER STAY:
-  // If Ghost is actively playing, Stay MUST NOT interrupt Ghost!
-  if (ghostLockActive || (currentPlayingAudio === audioGhost && !audioGhost.paused)) {
-    // Queue Stay to play cleanly right after Ghost finishes its playthrough
-    audioGhost.onended = () => {
-      ghostLockActive = false;
-      hideBigGhostPopup();
-      if (currentPlayingAudio === audioGhost) {
-        currentPlayingAudio = null;
-      }
-      playStayAudio();
-    };
-    return;
-  }
-
-  // 1. Cancel Ghost lock and hide Fath popup
+  // 1. Cancel Ghost lock, stop Ghost audio, and dismiss Fath popup
   ghostLockActive = false;
   clearTimeout(ghostLockTimeout);
   hideBigGhostPopup();
 
-  // 2. Elevate priority: lock out mouse audio for full duration of stay.mp3
+  // 2. Elevate priority: lock out mouse/keyboard audio for duration of stay.mp3
   stayLockActive = true;
   clearTimeout(stayLockTimeout);
   stayLockTimeout = setTimeout(() => {
@@ -1791,7 +1777,7 @@ function playStayAudio() {
     }
   };
 
-  // 3. Play stay.mp3 with 2nd highest priority
+  // 3. Play stay.mp3 immediately
   playExclusiveAudio(audioStay, false);
 
   // 4. Show Stay Banner & terminal log
